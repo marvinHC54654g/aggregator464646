@@ -13,7 +13,7 @@ env:
   SUBSCRIBE_CONF: ${{ secrets.SUBSCRIBE_CONF }}
 
   # token
-  PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}  
+  PUSH_TOKEN: ${{ secrets.PUSH_TOKEN }}
 
   # network reachable
   REACHABLE: ${{ vars.REACHABLE }}
@@ -27,12 +27,12 @@ env:
   # workflow mode
   WORKFLOW_MODE: ${{ vars.WORKFLOW_MODE }}
 
-  # include spwcial protocols, such vless hysteria2 and hysteria
+  # include special protocols, such vless hysteria2 and hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
   process:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
