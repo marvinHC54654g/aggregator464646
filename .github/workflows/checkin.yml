@@ -23,5 +23,7 @@ jobs:
       - run: ls -lart .github/actions/checkin/
       - run: chmod +x $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
       - run: python $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
+      - name: Install coreutils (if needed)
+        run: sudo apt-get update && sudo apt-get install -y coreutils
       - name: Timestamp
-        run: date  
+        run: date
