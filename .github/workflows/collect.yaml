@@ -3,10 +3,12 @@ on:
   # 每周日00:00执行一次
   schedule:
     - cron: "0 0 * * 1"
+  # 允许手动触发
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.repository }}
+  # 取消进行中的相同组内的工作流
   cancel-in-progress: true
 
 env:
@@ -28,9 +30,12 @@ env:
 
 jobs:
   process:
+    # 运行在最新版本的Ubuntu上
     runs-on: ubuntu-latest
 
+    # 步骤
     steps:
+      # 签出代码
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -58,8 +63,8 @@ jobs:
               exit 1
           fi
 
-          # 使用正则表达式验证GIST_LINK格式
-          if! [[ "$GIST_LINK" =~ ^[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+$ ]]; then
+          LINK_PARTS=$(echo "$GIST_LINK" | awk -F'/' 'NF==2 && $1!="" && $2!=""')
+          if [ -z "$LINK_PARTS" ]; then
               echo "Error: environment 'GIST_LINK' is not valid, should be 'username/gist_id' format"
               exit 1
           fi
