@@ -24,4 +24,4 @@ jobs:
       - run: chmod +x $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
       - run: python $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
       - name: Timestamp
-        run: /bin/date  
+        run: date  
