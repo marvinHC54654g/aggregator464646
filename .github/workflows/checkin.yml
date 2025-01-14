@@ -8,19 +8,18 @@ jobs:
   sync_with_upstream:
     runs-on: ubuntu-latest
     name: auto checkin for traffic
-
-    steps:
+    steps: 
       - name: Checkout
-        uses: actions/checkout@v4  
+        uses: actions/checkout@v4
         with:
-          ref: master
-
+          ref: main
+          fetch-depth: 0
+          fetch-tags: true
       - name: Checkin
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
           architecture: "x64"
       - run: python./.github/actions/checkin/universal.py
-
       - name: Timestamp
         run: date
