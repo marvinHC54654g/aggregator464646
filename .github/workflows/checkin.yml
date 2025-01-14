@@ -20,6 +20,7 @@ jobs:
         with:
           python-version: "3.x"
           architecture: "x64"
+      - run: which python
       - run: python./.github/actions/checkin/universal.py
       - name: Timestamp
-        run: date
+        run: /bin/date
