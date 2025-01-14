@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  
         with:
           ref: master
 
@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.x"
           architecture: "x64"
-      - run: python ./.github/actions/checkin/universal.py
+      - run: python./.github/actions/checkin/universal.py
 
       - name: Timestamp
         run: date
