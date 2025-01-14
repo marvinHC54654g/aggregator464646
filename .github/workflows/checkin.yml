@@ -6,11 +6,11 @@ on:
 
 jobs:
   sync_with_upstream:
-    runs-on: ubuntu-24.04  
+    runs-on: ubuntu-latest
     name: auto checkin for traffic
     steps: 
       - name: Checkout
-        uses: actions/checkout@v4  
+        uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
@@ -24,4 +24,4 @@ jobs:
       - run: chmod +x $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
       - run: python $GITHUB_WORKSPACE/.github/actions/checkin/universal.py
       - name: Timestamp
-        run: /bin/date
+        run: /bin/date  
