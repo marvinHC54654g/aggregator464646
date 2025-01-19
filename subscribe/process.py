@@ -69,7 +69,21 @@ def load_configs(
         groups.update(config.get("groups", {}))
         update_conf.update(config.get("update", {}))
         crawl_conf.update(config.get("crawl", {}))
-        storage.update(config.get("storage", {}))
+
+        # 设置默认存储配置
+        storage = config.get("storage", {})
+        if not storage:
+            storage = {
+                "engine": "file",  # 默认存储类型
+                "items": {
+                    "default": {
+                        "type": "file",  # 默认存储类型
+                        "path": os.path.join(PATH, "output.txt")  # 默认文件路径
+                    }
+                }
+            }
+        else:
+            storage.update(config.get("storage", {}))
 
         nonlocal engine
         engine = utils.trim(storage.get("engine", "")) or engine
@@ -838,4 +852,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     utils.load_dotenv(args.envrionment)
 
-    aggregate(args=args)
+    aggregate(args=args)  
