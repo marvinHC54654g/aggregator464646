@@ -161,7 +161,7 @@
         }
     },
     "storage": {
-        "engine": "file",
+        "engine": "local",  // 确保值为 local 或 file
         "items": {
             "xxx-clash": {
                 "type": "file",
