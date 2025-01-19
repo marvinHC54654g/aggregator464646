@@ -133,13 +133,6 @@ def load_configs(
             google_conf["push_to"] = push_to
             params["google"] = google_conf
 
-        # Yandex 爬虫配置
-        yandex_conf = spiders.get("yandex", {})
-        push_to = list(set(yandex_conf.get("push_to", [])))
-        if yandex_conf.pop("enable", True) and push_to:
-            yandex_conf["push_to"] = push_to
-            params["yandex"] = yandex_conf
-
         # GitHub 爬虫配置
         github_conf = spiders.get("github", {})
         push_to = list(set(github_conf.get("push_to", [])))
@@ -229,7 +222,6 @@ def load_configs(
 
         # 脚本爬虫配置
         scripts_conf, scripts = spiders.get("scripts", []), {}
-
         for script in scripts_conf:
             enable = script.pop("enable", True)
             path = script.pop("script", "").strip()
