@@ -270,7 +270,7 @@ def load_configs(
 
             for category, storage_name in targets.items():
                 category = utils.trim(category).lower()
-                if category not in subconverter.CONVERT_TARGETS:
+                if category not in subconverter.CONVERT_TARGETs:
                     logger.error(f"group {name} contains unsupported conversion type: {category}")
                     return False
 
@@ -852,4 +852,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     utils.load_dotenv(args.envrionment)
 
-    aggregate(args=args)  
+    aggregate(args=args)
