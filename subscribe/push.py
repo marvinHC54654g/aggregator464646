@@ -467,20 +467,11 @@ SUPPORTED_ENGINES = set(list(ENGINE_MAPPING.values()) + ["local"])
 def get_instance(engine: str) -> PushTo:
     def confirm_engine(engine: str) -> str:
         engine = utils.trim(engine).lower()
+        print(f"Debug: Engine parameter received: {engine}")  # 添加调试信息
         if engine and engine not in SUPPORTED_ENGINES:
             return ""
-
         if not engine:
-            subscription = os.environ.get("SUBSCRIBE_CONF", "").strip()
-            if not isurl(url=subscription):
-                engine = "local"
-            else:
-                domain = utils.extract_domain(url=subscription, include_protocal=False)
-                for k, v in ENGINE_MAPPING.items():
-                    if domain == v:
-                        engine = k
-                        break
-
+            return "local"  # 默认回退到 local 存储
         return engine
 
     target = confirm_engine(engine=engine)
