@@ -162,7 +162,7 @@
     },
     "storage": {
         "engine": "local",  // 存储引擎（local 或 file）
-        "items": {
+        "items": {  
             "xxx-clash": {
                 "type": "file",  // 存储类型
                 "path": "/path/to/clash.txt"  // 文件路径
