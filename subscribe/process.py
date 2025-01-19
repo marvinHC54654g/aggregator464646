@@ -74,7 +74,7 @@ def load_configs(
         storage = config.get("storage", {})
         if not storage:
             storage = {
-                "engine": "file",  # 默认存储类型
+                "engine": "local",  # 默认存储类型
                 "items": {
                     "default": {
                         "type": "file",  # 默认存储类型
@@ -87,6 +87,7 @@ def load_configs(
 
         nonlocal engine
         engine = utils.trim(storage.get("engine", "")) or engine
+        print(f"Loaded storage engine: {engine}")  # 添加调试信息
 
         nonlocal delay
         delay = min(delay, max(config.get("delay", sys.maxsize), 50))
@@ -825,7 +826,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-s",
         "--server",
-        type=str,
+        type=str,  
         required=False,
         default="",
         help="remote config file",
