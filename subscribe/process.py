@@ -53,7 +53,7 @@ class ProcessConfig(object):
     update: dict = field(default_factory=dict)
 
     # max acceptable delay
-    delay: int = 5000
+    delay: int = 1000  # 默认延迟阈值设置为 1000 毫秒
 
 
 def load_configs(
@@ -811,7 +811,7 @@ if __name__ == "__main__":
         "--timeout",
         type=int,
         required=False,
-        default=5000,
+        default=2000,  # 默认超时时间设置为 2000 毫秒
         help="timeout",
     )
 
