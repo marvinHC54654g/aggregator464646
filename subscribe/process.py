@@ -270,7 +270,7 @@ def load_configs(
 
             for category, storage_name in targets.items():
                 category = utils.trim(category).lower()
-                if category not in subconverter.CONVERT_TARGETs:
+                if category not in subconverter.CONVERT_TARGETS:
                     logger.error(f"group {name} contains unsupported conversion type: {category}")
                     return False
 
