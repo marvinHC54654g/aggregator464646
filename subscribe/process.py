@@ -282,11 +282,19 @@ def load_configs(
                 logger.error(f"cannot fetch config from remote, url: {utils.hide(url=url)}")
             else:
                 os.environ["SUBSCRIBE_CONF"] = url
-                parse_config(json.loads(content))
+                # 判断文件格式
+                if url.endswith(".yaml") or url.endswith(".yml"):
+                    parse_config(yaml.safe_load(content))  # 解析 YAML
+                else:
+                    parse_config(json.loads(content))  # 解析 JSON
         else:
             localfile = os.path.abspath(url)
             if os.path.exists(localfile) and os.path.isfile(localfile):
-                config = json.loads(open(localfile, "r", encoding="utf8").read())
+                # 判断文件格式
+                if localfile.endswith(".yaml") or localfile.endswith(".yml"):
+                    config = yaml.safe_load(open(localfile, "r", encoding="utf8"))
+                else:
+                    config = json.loads(open(localfile, "r", encoding="utf8").read())
                 os.environ["SUBSCRIBE_CONF"] = localfile
                 parse_config(config)
 
@@ -303,8 +311,8 @@ def load_configs(
             logger.error("parse configuration failed due to process abnormally exits")
 
         sys.exit(e.code)
-    except:
-        logger.error("occur error when load task config")
+    except Exception as e:
+        logger.error(f"occur error when load task config: {str(e)}")
         sys.exit(0)
 
     return ProcessConfig(
