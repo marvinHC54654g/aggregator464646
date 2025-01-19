@@ -161,29 +161,27 @@
         }
     },
     "storage": {
-        "engine": "xxx",
+        "engine": "file",
         "items": {
             "xxx-clash": {
-                "username": "",
-                "folderid": "",
-                "fileid": ""
+                "type": "file",
+                "path": "/path/to/clash.txt"
             },
             "xxx-singbox": {
-                "fileid": ""
+                "type": "file",
+                "path": "/path/to/singbox.txt"
             },
             "xxx-v2ray": {
-                "username": "",
-                "fileid": ""
+                "type": "file",
+                "path": "/path/to/v2ray.txt"
             },
             "crawledsubs": {
-                "username": "",
-                "folderid": "",
-                "fileid": ""
+                "type": "file",
+                "path": "/path/to/crawledsubs.txt"
             },
             "crawledproxies": {
-                "username": "",
-                "folderid": "",
-                "fileid": ""
+                "type": "file",
+                "path": "/path/to/crawledproxies.txt"
             }
         }
     }
