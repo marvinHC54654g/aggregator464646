@@ -826,7 +826,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-s",
         "--server",
-        type=str,  
+        type=str,
         required=False,
         default="",
         help="remote config file",
