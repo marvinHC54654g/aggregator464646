@@ -32,29 +32,28 @@ from workflow import TaskConfig
 import clash
 import subconverter
 
-# 获取当前文件的绝对路径
 PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 @dataclass
 class ProcessConfig(object):
-    # 任务列表
+    # task list
     tasks: list[dict] = field(default_factory=list)
 
-    # 爬取配置
+    # crawl config
     crawl: dict = field(default_factory=dict)
 
-    # 持久化配置
+    # persist config
     storage: dict = field(default_factory=dict)
 
-    # 组配置
+    # groups config
     groups: dict[dict] = field(default_factory=dict)
 
-    # 更新配置
+    # update config
     update: dict = field(default_factory=dict)
 
-    # 最大可接受的延迟（毫秒）
-    delay: int = 1000  # 默认延迟阈值设置为 1000 毫秒
+    # max acceptable delay
+    delay: int = 5000
 
 
 def load_configs(
@@ -64,30 +63,14 @@ def load_configs(
     display: bool = True,
 ) -> ProcessConfig:
     def parse_config(config: dict) -> None:
-        # 解析配置并更新任务、组、更新、爬取和存储配置
         tasks.extend(config.get("domains", []))
         groups.update(config.get("groups", {}))
         update_conf.update(config.get("update", {}))
         crawl_conf.update(config.get("crawl", {}))
-
-        # 设置默认存储配置
-        storage = config.get("storage", {})
-        if not storage:
-            storage = {
-                "engine": "local",  # 默认存储类型
-                "items": {
-                    "default": {
-                        "type": "file",  # 默认存储类型
-                        "path": os.path.join(PATH, "output.txt")  # 默认文件路径
-                    }
-                }
-            }
-        else:
-            storage.update(config.get("storage", {}))
+        storage.update(config.get("storage", {}))
 
         nonlocal engine
         engine = utils.trim(storage.get("engine", "")) or engine
-        print(f"Loaded storage engine: {engine}")  # 添加调试信息
 
         nonlocal delay
         delay = min(delay, max(config.get("delay", sys.maxsize), 50))
@@ -95,10 +78,10 @@ def load_configs(
         if only_check:
             return
 
-        # 全局排除规则
+        # global exclude
         params["exclude"] = crawl_conf.get("exclude", "")
 
-        # 持久化配置
+        # persistence configuration
         persist = {k: storage.get("items", {}).get(v, {}) for k, v in crawl_conf.get("persist", {}).items()}
         persist["engine"] = engine
         params["persist"] = persist
@@ -111,7 +94,7 @@ def load_configs(
         params["threshold"] = threshold
         spiders = deepcopy(crawl_conf)
 
-        # Telegram 爬虫配置
+        # spider's config for telegram
         telegram_conf = spiders.get("telegram", {})
         users = telegram_conf.pop("users", {})
         telegram_conf["pages"] = max(telegram_conf.get("pages", 1), 1)
@@ -126,14 +109,21 @@ def load_configs(
             telegram_conf["users"] = enabled_users
             params["telegram"] = telegram_conf
 
-        # Google 爬虫配置
+        # spider's config for google
         google_conf = spiders.get("google", {})
         push_to = list(set(google_conf.get("push_to", [])))
         if google_conf.pop("enable", True) and push_to:
             google_conf["push_to"] = push_to
             params["google"] = google_conf
 
-        # GitHub 爬虫配置
+        # spider's config for yandex
+        yandex_conf = spiders.get("yandex", {})
+        push_to = list(set(yandex_conf.get("push_to", [])))
+        if yandex_conf.pop("enable", True) and push_to:
+            yandex_conf["push_to"] = push_to
+            params["yandex"] = yandex_conf
+
+        # spider's config for github
         github_conf = spiders.get("github", {})
         push_to = list(set(github_conf.get("push_to", [])))
         spams = list(set(github_conf.get("spams", [])))
@@ -143,7 +133,7 @@ def load_configs(
             github_conf["spams"] = spams
             params["github"] = github_conf
 
-        # Twitter 爬虫配置
+        # spider's config for twitter
         twitter_conf = spiders.get("twitter", {})
         users = twitter_conf.pop("users", {})
         if twitter_conf.pop("enable", True) and users:
@@ -157,7 +147,7 @@ def load_configs(
 
             params["twitter"] = enabled_users
 
-        # GitHub 仓库爬虫配置
+        # spider's config for github's repositories
         repo_conf, repositories = spiders.get("repositories", []), {}
         for repo in repo_conf:
             enable = repo.pop("enable", True)
@@ -176,7 +166,7 @@ def load_configs(
             repositories[key] = repo
         params["repositories"] = repositories
 
-        # 指定页面的爬虫配置
+        # spider's config for specified page
         pages_conf, pages = spiders.get("pages", []), {}
         for page in pages_conf:
             enable = page.pop("enable", True)
@@ -200,7 +190,7 @@ def load_configs(
                 if not placeholder or placeholder not in url or not isinstance(url, str):
                     continue
 
-                # 页面编号范围
+                # page number range
                 start, end = -1, -1
                 try:
                     start = int(page.pop("start", 1))
@@ -220,8 +210,9 @@ def load_configs(
 
         params["pages"] = pages
 
-        # 脚本爬虫配置
+        # spider's config for scripts
         scripts_conf, scripts = spiders.get("scripts", []), {}
+
         for script in scripts_conf:
             enable = script.pop("enable", True)
             path = script.pop("script", "").strip()
@@ -232,14 +223,13 @@ def load_configs(
             if not isinstance(task_conf, dict):
                 task_conf = {}
 
-            # 记录存储引擎
+            # record storge engine
             task_conf["engine"] = engine
 
             scripts[path] = task_conf
         params["scripts"] = scripts
 
     def verify(storage: dict, groups: dict) -> bool:
-        # 验证存储和组配置是否有效
         if not isinstance(storage, dict) or not isinstance(groups, dict):
             return False
 
@@ -289,27 +279,19 @@ def load_configs(
                 logger.error(f"cannot fetch config from remote, url: {utils.hide(url=url)}")
             else:
                 os.environ["SUBSCRIBE_CONF"] = url
-                # 判断文件格式
-                if url.endswith(".yaml") or url.endswith(".yml"):
-                    config = yaml.safe_load(content)
-                    if "proxies" in config:  # 检查是否是 Clash 配置文件
-                        # 将 Clash 配置文件转换为脚本期望的格式
-                        config = {
-                            "domains": [{"name": "clash", "domain": "clash.com", "enable": True, "push_to": ["xxx"]}],
-                            "groups": {"xxx": {"targets": {"clash": "xxx-clash"}}},
-                            "storage": {"engine": "local", "items": {"xxx-clash": {"type": "file", "path": "subscribe/config/clash.txt"}}}
-                        }
-                    print("Loaded config:", config)  # 添加调试信息
-                else:
-                    config = json.loads(content)
-                    print("Loaded JSON config:", config)  # 添加调试信息
+                parse_config(json.loads(content))
+        else:
+            localfile = os.path.abspath(url)
+            if os.path.exists(localfile) and os.path.isfile(localfile):
+                config = json.loads(open(localfile, "r", encoding="utf8").read())
+                os.environ["SUBSCRIBE_CONF"] = localfile
                 parse_config(config)
 
-        # 检查配置
+        # check configuration
         if not verify(storage=storage, groups=groups):
             raise ValueError(f"there are some errors in the configuration, please check and confirm")
 
-        # 执行爬取任务
+        # execute crawl tasks
         if params:
             result = crawl.batch_crawl(conf=params, num_threads=num_threads, display=display)
             tasks.extend(result)
@@ -318,8 +300,8 @@ def load_configs(
             logger.error("parse configuration failed due to process abnormally exits")
 
         sys.exit(e.code)
-    except Exception as e:
-        logger.error(f"occur error when load task config: {str(e)}")
+    except:
+        logger.error("occur error when load task config")
         sys.exit(0)
 
     return ProcessConfig(
@@ -493,7 +475,7 @@ def assign(
 
     if (remain or only_check) and pc.groups:
         if only_check:
-            # 清理所有额外任务
+            # clean all extra tasks
             tasks, groups, globalid = [], {k: [] for k in groups.keys()}, 0
 
         for k, v in pc.groups.items():
@@ -502,7 +484,7 @@ def assign(
             if not targets:
                 continue
 
-            # 获取每个组的第一个转换配置
+            # get the first conversion configuration for each group
             push_conf = pc.storage.get("items", {}).get(targets.values()[0], {})
             subscribe = pushtool.raw_url(push_conf=push_conf)
             if k not in groups or not subscribe:
@@ -532,7 +514,7 @@ def aggregate(args: argparse.Namespace) -> None:
     clash_bin, subconverter_bin = executable.which_bin()
     display = not args.invisible
 
-    # 解析配置
+    # parse config
     server = utils.trim(args.server) or os.environ.get("SUBSCRIBE_CONF", "").strip()
     process_config = load_configs(
         url=server,
@@ -545,7 +527,7 @@ def aggregate(args: argparse.Namespace) -> None:
     pushtool = push.get_instance(engine=storages.get("engine", ""))
     retry = min(max(1, args.retry), 10)
 
-    # 生成任务
+    # generate tasks
     tasks, groups, sites = assign(
         pc=process_config,
         retry=retry,
@@ -559,7 +541,7 @@ def aggregate(args: argparse.Namespace) -> None:
         logger.error("cannot found any valid config, exit")
         sys.exit(0)
 
-    # 获取所有订阅
+    # fetch all subscriptions
     generate_conf = os.path.join(PATH, "subconverter", "generate.ini")
     if os.path.exists(generate_conf) and os.path.isfile(generate_conf):
         os.remove(generate_conf)
@@ -571,7 +553,7 @@ def aggregate(args: argparse.Namespace) -> None:
     for i in range(len(results)):
         data = results[i]
         if not data or data[0] < 0 or not data[1]:
-            # 不包含任何代理
+            # not contain any proxy
             if tasks[i] and tasks[i].sub:
                 subscribes[tasks[i].sub] = False
             continue
@@ -594,14 +576,14 @@ def aggregate(args: argparse.Namespace) -> None:
         filename = "config.yaml"
         proxies = clash.generate_config(workspace, proxies, filename)
 
-        # 过滤
+        # filer
         skip = utils.trim(os.environ.get("SKIP_ALIVE_CHECK", "false")).lower() in ["true", "1"]
         nochecks, starttime = proxies, time.time()
 
         if not skip:
             checks, nochecks = workflow.liveness_fillter(proxies=proxies)
             if checks:
-                # 可执行文件
+                # executable
                 utils.chmod(binpath)
 
                 logger.info(f"startup clash now, workspace: {workspace}, config: {filename}")
@@ -624,7 +606,7 @@ def aggregate(args: argparse.Namespace) -> None:
                     if isinstance(p, dict)
                 ]
 
-                # 检查
+                # check
                 masks = utils.multi_thread_run(
                     func=clash.check,
                     tasks=params,
@@ -632,7 +614,7 @@ def aggregate(args: argparse.Namespace) -> None:
                     show_progress=display,
                 )
 
-                # 关闭clash客户端
+                # close clash client
                 try:
                     process.terminate()
                 except:
@@ -681,7 +663,7 @@ def aggregate(args: argparse.Namespace) -> None:
         for target, storage_name in targets.items():
             persisted, content = False, " "
 
-            # 转换
+            # convert
             artifact = f"convert_{target}"
             dest_file = subconverter.get_filename(target=target)
 
@@ -713,18 +695,18 @@ def aggregate(args: argparse.Namespace) -> None:
 
                 mixed = target == "v2ray" or target == "mixed" or "ss" in target
                 if mixed and not utils.isb64encode(content=content):
-                    # base64 编码
+                    # base64 encode
                     try:
                         content = base64.b64encode(content.encode(encoding="UTF8")).decode(encoding="UTF8")
                     except Exception as e:
                         logger.error(f"base64 encode error, group: {k}, target: {target}, message: {str(e)}")
                         continue
 
-                # 保存到远程服务器
+                # save to remote server
                 push_conf = process_config.storage.get("items", {}).get(storage_name, {})
                 persisted = pushtool.push_to(content=content, push_conf=push_conf, group=f"{k}::{target}")
 
-            # 清理工作区
+            # clean workspace
             workflow.cleanup(os.path.join(PATH, "subconverter"), [dest_file, "generate.ini"])
 
             if content and not persisted:
@@ -829,7 +811,7 @@ if __name__ == "__main__":
         "--timeout",
         type=int,
         required=False,
-        default=2000,  # 默认超时时间设置为 2000 毫秒
+        default=5000,
         help="timeout",
     )
 
