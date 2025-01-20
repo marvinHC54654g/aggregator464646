@@ -449,29 +449,36 @@ class PushToGist(PushTo):
         return f"{prefix}/raw/{filename}"
 
 
-# 支持的文件存储引擎
 ENGINE_MAPPING = {
     "imperialb.in": "imperialb",
     "gist.githubusercontent.com": "gist",
     "paste.ding.free.hr": "drift",
     "pastefy.ga": "pastefy",
     "paste.gg": "pastegg",
-    "file": "local",  # 添加 file 到 local 的映射
-    "local": "local",  # 支持 local 作为存储引擎
 }
 
-# 支持的存储引擎集合
-SUPPORTED_ENGINES = set(list(ENGINE_MAPPING.values()) + ["local"])
+LOCAL_STORAGE = "local"
+
+SUPPORTED_ENGINES = set(list(ENGINE_MAPPING.values()) + [LOCAL_STORAGE])
 
 
 def get_instance(engine: str) -> PushTo:
     def confirm_engine(engine: str) -> str:
         engine = utils.trim(engine).lower()
-        print(f"Debug: Engine parameter received: {engine}")  # 添加调试信息
         if engine and engine not in SUPPORTED_ENGINES:
             return ""
+
         if not engine:
-            return "local"  # 默认回退到 local 存储
+            subscription = os.environ.get("SUBSCRIBE_CONF", "").strip()
+            if not isurl(url=subscription):
+                engine = LOCAL_STORAGE
+            else:
+                domain = utils.extract_domain(url=subscription, include_protocal=False)
+                for k, v in ENGINE_MAPPING.items():
+                    if domain == v:
+                        engine = k
+                        break
+
         return engine
 
     target = confirm_engine(engine=engine)
@@ -479,7 +486,7 @@ def get_instance(engine: str) -> PushTo:
         raise ValueError(f"[PushError] unknown storge type: {engine}")
 
     token = os.environ.get("PUSH_TOKEN", "").strip()
-    if target != "local" and not token:
+    if target != LOCAL_STORAGE and not token:
         raise ValueError(f"[PushError] not found 'PUSH_TOKEN' in environment variables, please check it and try again")
 
     if target == "imperialb":
@@ -492,7 +499,5 @@ def get_instance(engine: str) -> PushTo:
         return PushToPasteGG(token=token)
     elif target == "gist":
         return PushToGist(token=token)
-    elif target == "local":  # 支持 local 存储引擎
-        return PushToLocal()
 
     return PushToLocal()
