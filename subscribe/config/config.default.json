@@ -162,26 +162,26 @@
     },
     "storage": {
         "engine": "local",  // 存储引擎（local 或 file）
-        "items": {  
+        "items": {
             "xxx-clash": {
                 "type": "file",  // 存储类型
-                "path": "/path/to/clash.txt"  // 文件路径
+                "path": "subscribe/config/clash.txt"  // 保存到 subscribe/config 目录
             },
             "xxx-singbox": {
                 "type": "file",  // 存储类型
-                "path": "/path/to/singbox.txt"  // 文件路径
+                "path": "subscribe/config/singbox.txt"  // 保存到 subscribe/config 目录
             },
             "xxx-v2ray": {
                 "type": "file",  // 存储类型
-                "path": "/path/to/v2ray.txt"  // 文件路径
+                "path": "subscribe/config/v2ray.txt"  // 保存到 subscribe/config 目录
             },
             "crawledsubs": {
                 "type": "file",  // 存储类型
-                "path": "/path/to/crawledsubs.txt"  // 文件路径
+                "path": "subscribe/config/crawledsubs.txt"  // 保存到 subscribe/config 目录
             },
             "crawledproxies": {
                 "type": "file",  // 存储类型
-                "path": "/path/to/crawledproxies.txt"  // 文件路径
+                "path": "subscribe/config/crawledproxies.txt"  // 保存到 subscribe/config 目录
             }
         }
     }
