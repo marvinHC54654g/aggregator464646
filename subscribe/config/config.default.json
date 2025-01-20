@@ -1,144 +1,144 @@
 {
     "domains": [
         {
-            "name": "example",  // 任务名称
-            "sub": ["https://example.com/subscribe"],  // 订阅链接
-            "domain": "example.com",  // 域名
-            "enable": true,  // 是否启用
-            "rename": "",  // 重命名规则
-            "include": "",  // 包含规则
-            "exclude": "",  // 排除规则
-            "push_to": ["xxx"],  // 推送到的组
-            "ignorede": true,  // 是否忽略默认排除规则
-            "liveness": true,  // 是否检查节点活性
-            "tag": "",  // 自定义标签
-            "rate": 2.5,  // 节点倍率
-            "count": 2,  // 需要注册的账号数量
-            "coupon": "",  // 优惠码
-            "secure": false,  // 是否拒绝跳过证书验证
+            "name": "",
+            "sub": [],
+            "domain": "",
+            "enable": true,
+            "rename": "",
+            "include": "",
+            "exclude": "",
+            "push_to": [],
+            "ignorede": true,
+            "liveness": true,
+            "tag": "",
+            "rate": 2.5,
+            "count": 2,
+            "coupon": "",
+            "secure": false,
             "renew": {
                 "account": [
                     {
-                        "email": "",  // 注册邮箱
-                        "passwd": "",  // 注册密码
+                        "email": "",
+                        "passwd": "",
                         "ticket": {
-                            "enable": true,  // 是否启用工单
-                            "autoreset": false,  // 是否自动重置
-                            "subject": "",  // 工单主题
-                            "message": "",  // 工单内容
-                            "level": 1  // 工单优先级
+                            "enable": true,
+                            "autoreset": false,
+                            "subject": "",
+                            "message": "",
+                            "level": 1
                         }
                     }
                 ],
-                "plan_id": 3,  // 套餐ID
-                "package": "",  // 套餐名称
-                "method": 1,  // 支付方式
-                "coupon_code": "",  // 优惠码
+                "plan_id": 3,
+                "package": "",
+                "method": 1,
+                "coupon_code": "",
                 "chatgpt": {
-                    "enable": true,  // 是否启用 ChatGPT 检查
-                    "regex": "",  // 正则表达式
-                    "operate": "IN"  // 操作类型
+                    "enable": true,
+                    "regex": "",
+                    "operate": "IN"
                 }
             }
         }
     ],
     "crawl": {
-        "enable": true,  // 是否启用爬虫
-        "exclude": "",  // 全局排除规则
-        "threshold": 5,  // 爬取阈值
-        "singlelink": true,  // 是否单链接爬取
+        "enable": true,
+        "exclude": "",
+        "threshold": 5,
+        "singlelink": true,
         "persist": {
-            "subs": "crawledsubs",  // 订阅持久化配置
-            "proxies": "crawledproxies"  // 代理持久化配置
+            "subs": "crawledsubs",
+            "proxies": "crawledproxies"
         },
         "config": {
-            "rename": "",  // 重命名规则
-            "include": "",  // 包含规则
-            "exclude": "",  // 排除规则
-            "xxxxxxx": ""  // 其他配置
+            "rename": "",
+            "include": "",
+            "exclude": "",
+            "xxxxxxx": ""
         },
         "telegram": {
-            "enable": true,  // 是否启用 Telegram 爬虫
-            "pages": 5,  // 爬取页数
-            "exclude": "",  // 排除规则
+            "enable": true,
+            "pages": 5,
+            "exclude": "",
             "users": {
                 "channel": {
-                    "include": "",  // 包含规则
-                    "exclude": "",  // 排除规则
+                    "include": "",
+                    "exclude": "",
                     "config": {
-                        "rename": "",  // 重命名规则
-                        "xxxxxx": ""  // 其他配置
+                        "rename": "",
+                        "xxxxxx": ""
                     },
-                    "push_to": []  // 推送到的组
+                    "push_to": []
                 }
             }
         },
         "google": {
-            "enable": false,  // 是否启用 Google 爬虫
-            "exclude": "",  // 排除规则
-            "notinurl": [],  // 不在 URL 中的关键词
-            "push_to": []  // 推送到的组
+            "enable": false,
+            "exclude": "",
+            "notinurl": [],
+            "push_to": []
         },
         "github": {
-            "enable": true,  // 是否启用 GitHub 爬虫
-            "pages": 2,  // 爬取页数
-            "push_to": [],  // 推送到的组
-            "exclude": "",  // 排除规则
-            "spams": []  // 垃圾关键词
+            "enable": true,
+            "pages": 2,
+            "push_to": [],
+            "exclude": "",
+            "spams": []
         },
         "twitter": {
-            "enable": true,  // 是否启用 Twitter 爬虫
+            "enable": true,
             "users": {
                 "username": {
-                    "enable": true,  // 是否启用该用户爬虫
-                    "num": 30,  // 爬取数量
-                    "include": "",  // 包含规则
-                    "exclude": "",  // 排除规则
+                    "enable": true,
+                    "num": 30,
+                    "include": "",
+                    "exclude": "",
                     "config": {
-                        "rename": "",  // 重命名规则
-                        "xxxxxx": ""  // 其他配置
+                        "rename": "",
+                        "xxxxxx": ""
                     },
-                    "push_to": []  // 推送到的组
+                    "push_to": []
                 }
             }
         },
         "repositories": [
             {
-                "enable": false,  // 是否启用仓库爬虫
-                "username": "",  // GitHub 用户名
-                "repo_name": "",  // 仓库名称
-                "commits": 3,  // 爬取提交数量
-                "exclude": "",  // 排除规则
-                "push_to": []  // 推送到的组
+                "enable": false,
+                "username": "",
+                "repo_name": "",
+                "commits": 3,
+                "exclude": "",
+                "push_to": []
             }
         ],
         "pages": [
             {
-                "enable": true,  // 是否启用页面爬虫
-                "url": "",  // 页面 URL
-                "include": "",  // 包含规则
-                "exclude": "",  // 排除规则
+                "enable": true,
+                "url": "",
+                "include": "",
+                "exclude": "",
                 "config": {
-                    "rename": ""  // 重命名规则
+                    "rename": ""
                 },
-                "push_to": []  // 推送到的组
+                "push_to": []
             }
         ],
         "scripts": [
             {
-                "enable": false,  // 是否启用脚本爬虫
-                "script": "file#function",  // 脚本路径
+                "enable": false,
+                "script": "file#function",
                 "params": {
                     "persist": {
-                        "fileid": ""  // 文件 ID
+                        "fileid": ""
                     },
-                    "any": "xxx",  // 其他参数
+                    "any": "xxx",
                     "config": {
-                        "enable": true,  // 是否启用
-                        "liveness": true,  // 是否检查活性
-                        "exclude": "",  // 排除规则
-                        "rename": "",  // 重命名规则
-                        "push_to": []  // 推送到的组
+                        "enable": true,
+                        "liveness": true,
+                        "exclude": "",
+                        "rename": "",
+                        "push_to": []
                     }
                 }
             }
@@ -146,42 +146,44 @@
     },
     "groups": {
         "xxx": {
-            "emoji": true,  // 是否启用 Emoji
-            "list": true,  // 是否启用列表
+            "emoji": true,
+            "list": true,
             "targets": {
-                "clash": "xxx-clash",  // Clash 目标
-                "singbox": "xxx-singbox",  // SingBox 目标
-                "v2ray": "xxx-v2ray"  // V2Ray 目标
+                "clash": "xxx-clash",
+                "singbox": "xxx-singbox",
+                "v2ray": "xxx-v2ray"
             },
             "regularize": {
-                "enable": false,  // 是否启用正则化
-                "locate": true,  // 是否启用定位
-                "bits": 2  // 位数
+                "enable": false,
+                "locate": true,
+                "bits": 2
             }
         }
     },
     "storage": {
-        "engine": "local",  // 存储引擎（local 或 file）
+        "engine": "xxx",
         "items": {
             "xxx-clash": {
-                "type": "file",  // 存储类型
-                "path": "subscribe/config/clash.txt"  // 保存到 subscribe/config 目录
+                "username": "",
+                "folderid": "",
+                "fileid": ""
             },
             "xxx-singbox": {
-                "type": "file",  // 存储类型
-                "path": "subscribe/config/singbox.txt"  // 保存到 subscribe/config 目录
+                "fileid": ""
             },
             "xxx-v2ray": {
-                "type": "file",  // 存储类型
-                "path": "subscribe/config/v2ray.txt"  // 保存到 subscribe/config 目录
+                "username": "",
+                "fileid": ""
             },
             "crawledsubs": {
-                "type": "file",  // 存储类型
-                "path": "subscribe/config/crawledsubs.txt"  // 保存到 subscribe/config 目录
+                "username": "",
+                "folderid": "",
+                "fileid": ""
             },
             "crawledproxies": {
-                "type": "file",  // 存储类型
-                "path": "subscribe/config/crawledproxies.txt"  // 保存到 subscribe/config 目录
+                "username": "",
+                "folderid": "",
+                "fileid": ""
             }
         }
     }
