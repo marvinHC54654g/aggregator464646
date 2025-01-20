@@ -291,18 +291,18 @@ def load_configs(
                 os.environ["SUBSCRIBE_CONF"] = url
                 # 判断文件格式
                 if url.endswith(".yaml") or url.endswith(".yml"):
-                    parse_config(yaml.safe_load(content))  # 解析 YAML
+                    config = yaml.safe_load(content)
+                    if "proxies" in config:  # 检查是否是 Clash 配置文件
+                        # 将 Clash 配置文件转换为脚本期望的格式
+                        config = {
+                            "domains": [{"name": "clash", "domain": "clash.com", "enable": True, "push_to": ["xxx"]}],
+                            "groups": {"xxx": {"targets": {"clash": "xxx-clash"}}},
+                            "storage": {"engine": "local", "items": {"xxx-clash": {"type": "file", "path": "subscribe/config/clash.txt"}}}
+                        }
+                    print("Loaded config:", config)  # 添加调试信息
                 else:
-                    parse_config(json.loads(content))  # 解析 JSON
-        else:
-            localfile = os.path.abspath(url)
-            if os.path.exists(localfile) and os.path.isfile(localfile):
-                # 判断文件格式
-                if localfile.endswith(".yaml") or localfile.endswith(".yml"):
-                    config = yaml.safe_load(open(localfile, "r", encoding="utf8"))
-                else:
-                    config = json.loads(open(localfile, "r", encoding="utf8").read())
-                os.environ["SUBSCRIBE_CONF"] = localfile
+                    config = json.loads(content)
+                    print("Loaded JSON config:", config)  # 添加调试信息
                 parse_config(config)
 
         # 检查配置
